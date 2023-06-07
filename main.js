@@ -1,36 +1,9 @@
 const addItemBtn = document.getElementById("add-item");
 const remaingTodosList = document.getElementById("remaing-list");
 const completedTodosList = document.getElementById("done-list");
+const updatItemBtn = document.getElementById("update-item");
 
-async function getRemaingTodos() {
-  return new Promise(async () => {
-    const remaingTodosArr = await axios.get(
-      "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/remaingTodos"
-    );
-    const remaingTodos = remaingTodosArr.data;
-    console.log("remaing todos called!!!!");
-    return remaingTodos;
-  });
-}
-async function getDoneTods() {
-  return new Promise(async () => {
-    const doneTodosArr = await axios.get(
-      "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/doneTodos"
-    );
-    const doneTodos = doneTodosArr.data;
-    console.log("done todos called !!!");
-    return doneTodos;
-  });
-}
-// const remaingTodos = [
-//   { todoName: "drink water", description: "I like water" },
-//   { todoName: "drink tea", description: "I like tea" },
-//   { todoName: "drink cofee", description: "I like cofee" },
-// ];
-
-// const doneTodos = [
-//   { todoName: "do break fast", description: "I love breakfast" },
-// ];
+updatItemBtn.style.display = "none";
 
 async function addTodo(e) {
   e.preventDefault();
@@ -39,7 +12,7 @@ async function addTodo(e) {
     const description = document.getElementById("todo-description").value;
 
     let response = await axios.post(
-      "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/remaingTodos",
+      "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos",
       {
         todoName,
         description,
@@ -65,17 +38,25 @@ async function addTodo(e) {
 
 async function renderItemsToPage() {
   try {
-    const remaingTodos = await getRemaingTodos();
+    const remaingTodosArr = await axios.get(
+      "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos"
+    );
+    const remaingTodos = remaingTodosArr.data;
+
     remaingTodosList.innerHTML = "";
     remaingTodos.forEach((item) => {
       const todoItem = document.createElement("li");
       todoItem.innerHTML = `${item.todoName}--${item.description}
       <button id="check-icon"><i class="fa-solid fa-check my-icon"></i></button>
-      <button id="cross-icon"><i class="fa-solid fa-xmark my-icon"></i></button>`;
+      <button id="cross-icon"><i class="fa-solid fa-xmark my-icon"></i></button>
+      <button id="edit-icon"><i class="fa-solid fa-pen-to-square my-icon"></i></button>`;
       remaingTodosList.appendChild(todoItem);
     });
 
-    const doneTodos = await getDoneTods();
+    const doneTodosArr = await axios.get(
+      "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/doneTodos"
+    );
+    const doneTodos = doneTodosArr.data;
 
     completedTodosList.innerHTML = "";
     doneTodos.forEach((item) => {
@@ -88,13 +69,36 @@ async function renderItemsToPage() {
     console.log(e);
   }
 }
+async function handleEdit(itemIndex) {
+  const todoName = document.getElementById("todo-name").value;
+  const description = document.getElementById("todo-description").value;
 
-async function handleSaveAndDelete(e) {
+  let response = await axios.put(
+    "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos/" +
+      itemIndex,
+    {
+      todoName,
+      description,
+    }
+  );
+
+  renderItemsToPage();
+
+  updatItemBtn.style.display = "none";
+  addItemBtn.style.display = "block";
+
+  document.getElementById("todo-name").value = "";
+  document.getElementById("todo-description").value = "";
+}
+async function handleSaveAndDeleteEdit(e) {
   if (e.target.className === "fa-solid fa-check my-icon") {
     try {
       let [todoName, description] =
         e.target.parentElement.parentElement.innerText.split("--");
-      const remaingTodos = await getRemaingTodos();
+      const remaingTodosArr = await axios.get(
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos"
+      );
+      const remaingTodos = remaingTodosArr.data;
 
       let itemIndex;
       remaingTodos.forEach((item, index) => {
@@ -105,12 +109,12 @@ async function handleSaveAndDelete(e) {
       });
       // remaingTodos.splice(itemIndex, 1);
       let response = await axios.delete(
-        "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/remaingTodos/" +
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos/" +
           itemIndex
       );
 
       let response1 = await axios.post(
-        "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/doneTodos",
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/doneTodos",
         {
           todoName,
           description,
@@ -130,7 +134,10 @@ async function handleSaveAndDelete(e) {
       let [todoName, description] =
         e.target.parentElement.parentElement.innerText.split("--");
 
-      const remaingTodos = await getRemaingTodos();
+      const remaingTodosArr = await axios.get(
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos"
+      );
+      const remaingTodos = remaingTodosArr.data;
       let itemIndex;
       remaingTodos.forEach((item, index) => {
         if (item.todoName === todoName) {
@@ -140,13 +147,37 @@ async function handleSaveAndDelete(e) {
       });
       // remaingTodos.splice(itemIndex, 1);
       let response2 = await axios.delete(
-        "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/remaingTodos/" +
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos/" +
           itemIndex
       );
       renderItemsToPage();
     } catch (e) {
       console.log(e);
     }
+  } else if (e.target.className === "fa-solid fa-pen-to-square my-icon") {
+    addItemBtn.style.display = "none";
+    updatItemBtn.style.display = "block";
+    let [todoName, description] =
+      e.target.parentElement.parentElement.innerText.split("--");
+
+    const remaingTodosArr = await axios.get(
+      "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/remaingTodos"
+    );
+    const remaingTodos = remaingTodosArr.data;
+    let itemIndex;
+    remaingTodos.forEach((item, index) => {
+      if (item.todoName === todoName) {
+        // itemIndex = index;
+        itemIndex = item._id;
+      }
+    });
+    document.getElementById("todo-name").value = todoName;
+    document.getElementById("todo-description").value = description;
+
+    updatItemBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleEdit(itemIndex);
+    });
   }
 }
 
@@ -156,7 +187,10 @@ async function deleteTodoFromCompltedList(e) {
       let [todoName, description] =
         e.target.parentElement.parentElement.innerText.split("--");
 
-      const doneTodos = await getDoneTods();
+      const doneTodosArr = await axios.get(
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/doneTodos"
+      );
+      const doneTodos = doneTodosArr.data;
       let itemIndex;
       doneTodos.forEach((item, index) => {
         if (item.todoName === todoName) {
@@ -166,7 +200,7 @@ async function deleteTodoFromCompltedList(e) {
       });
       // doneTodos.splice(itemIndex, 1);
       let response4 = axios.delete(
-        "https://crudcrud.com/api/2ac6bca2acf54022b8212376dca21487/doneTodos/" +
+        "https://crudcrud.com/api/08391bf90ba04ac7964e6f81b21e06b5/doneTodos/" +
           itemIndex
       );
       renderItemsToPage();
@@ -175,16 +209,8 @@ async function deleteTodoFromCompltedList(e) {
     }
   }
 }
+
 addItemBtn.addEventListener("click", addTodo);
-remaingTodosList.addEventListener("click", handleSaveAndDelete);
+remaingTodosList.addEventListener("click", handleSaveAndDeleteEdit);
 completedTodosList.addEventListener("click", deleteTodoFromCompltedList);
-// renderItemsToPage();
-
-async function getArrs() {
-  const remaingArr = await getRemaingTodos();
-  const doneArr = await getDoneTods();
-
-  console.log(remaingArr);
-  console.log(doneArr);
-}
-getArrs();
+renderItemsToPage();

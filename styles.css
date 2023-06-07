@@ -2,7 +2,7 @@
   padding: 10px;
 }
 .form-conatainer {
-  width: 70%;
+  width: 90%;
   border: 1px solid green;
   padding: 20px;
   margin: auto;
@@ -17,7 +17,7 @@
   border: 1px solid green;
   margin: auto;
   margin-top: 20px;
-  width: 70%;
+  width: 90%;
 }
 .list-heading {
   text-align: center;
@@ -26,7 +26,11 @@
   font-size: 24px;
 }
 #check-icon,
-#cross-icon {
+#cross-icon,
+#edit-icon {
   background-color: white;
   border: none;
+}
+button {
+  display: inline;
 }
