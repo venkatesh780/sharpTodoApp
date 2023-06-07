@@ -1,0 +1,32 @@
+#root {
+  padding: 10px;
+}
+.form-conatainer {
+  width: 70%;
+  border: 1px solid green;
+  padding: 20px;
+  margin: auto;
+}
+.col-conatiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.todos-remaing-list,
+.todos-done-list {
+  border: 1px solid green;
+  margin: auto;
+  margin-top: 20px;
+  width: 70%;
+}
+.list-heading {
+  text-align: center;
+}
+.my-icon {
+  font-size: 24px;
+}
+#check-icon,
+#cross-icon {
+  background-color: white;
+  border: none;
+}
