@@ -52,7 +52,7 @@ function renderItemsToPage() {
   });
 }
 
-function markTodoAsDone(e) {
+function handleSaveAndDelete(e) {
   if (e.target.className === "fa-solid fa-check my-icon") {
     let [todoName, description] =
       e.target.parentElement.parentElement.innerText.split("--");
@@ -69,10 +69,37 @@ function markTodoAsDone(e) {
     };
     doneTodos.push(data);
     renderItemsToPage();
+  } else if (e.target.className === "fa-solid fa-xmark my-icon") {
+    let [todoName, description] =
+      e.target.parentElement.parentElement.innerText.split("--");
+    let itemIndex;
+    remaingTodos.forEach((item, index) => {
+      if (item.todoName === todoName) {
+        itemIndex = index;
+      }
+    });
+    remaingTodos.splice(itemIndex, 1);
+    renderItemsToPage();
+  }
+}
+
+function deleteTodoFromCompltedList(e) {
+  if (e.target.className === "fa-solid fa-xmark my-icon") {
+    let [todoName, description] =
+      e.target.parentElement.parentElement.innerText.split("--");
+    let itemIndex;
+    doneTodos.forEach((item, index) => {
+      if (item.todoName === todoName) {
+        itemIndex = index;
+      }
+    });
+    doneTodos.splice(itemIndex, 1);
+    renderItemsToPage();
   }
 }
 addItemBtn.addEventListener("click", addTodo);
-remaingTodosList.addEventListener("click", markTodoAsDone);
+remaingTodosList.addEventListener("click", handleSaveAndDelete);
+completedTodosList.addEventListener("click", deleteTodoFromCompltedList);
 renderItemsToPage();
 
 // checkIcon.addEventListener("click", markTodoAsDone);
