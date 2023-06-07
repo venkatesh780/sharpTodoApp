@@ -12,8 +12,6 @@ const doneTodos = [
   { todoName: "do break fast", description: "I love breakfast" },
 ];
 
-renderItemsToPage();
-
 // const checkIcon = document.getElementById("check-icon");
 // const crossIcon = document.getElementById("cross-icon");
 
@@ -26,7 +24,7 @@ function addTodo(e) {
     todoName,
     description,
   };
-  itemsArr.push(data);
+  remaingTodos.push(data);
 
   remaingTodosList.innerHTML = "";
   renderItemsToPage();
@@ -37,6 +35,7 @@ function addTodo(e) {
   document.getElementById("todo-name").focus();
 }
 function renderItemsToPage() {
+  remaingTodosList.innerHTML = "";
   remaingTodos.forEach((item) => {
     const todoItem = document.createElement("li");
     todoItem.innerHTML = `${item.todoName}--${item.description}
@@ -44,7 +43,7 @@ function renderItemsToPage() {
     <button id="cross-icon"><i class="fa-solid fa-xmark my-icon"></i></button>`;
     remaingTodosList.appendChild(todoItem);
   });
-
+  completedTodosList.innerHTML = "";
   doneTodos.forEach((item) => {
     const todoItem = document.createElement("li");
     todoItem.innerHTML = `${item.todoName}--${item.description}
@@ -55,9 +54,25 @@ function renderItemsToPage() {
 
 function markTodoAsDone(e) {
   if (e.target.className === "fa-solid fa-check my-icon") {
+    let [todoName, description] =
+      e.target.parentElement.parentElement.innerText.split("--");
+    let itemIndex;
+    remaingTodos.forEach((item, index) => {
+      if (item.todoName === todoName) {
+        itemIndex = index;
+      }
+    });
+    remaingTodos.splice(itemIndex, 1);
+    let data = {
+      todoName,
+      description,
+    };
+    doneTodos.push(data);
+    renderItemsToPage();
   }
 }
 addItemBtn.addEventListener("click", addTodo);
 remaingTodosList.addEventListener("click", markTodoAsDone);
+renderItemsToPage();
 
 // checkIcon.addEventListener("click", markTodoAsDone);
